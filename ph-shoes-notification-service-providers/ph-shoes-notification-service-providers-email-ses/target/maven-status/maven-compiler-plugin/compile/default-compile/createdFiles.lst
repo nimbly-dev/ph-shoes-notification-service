@@ -1,0 +1,3 @@
+com\nimbly\phshoesbackend\notification\email\providers\ses\config\NotificationSesProps.class
+com\nimbly\phshoesbackend\notification\email\providers\ses\service\SesNotificationServiceImpl.class
+com\nimbly\phshoesbackend\notification\email\providers\ses\config\SesNotificationAutoConfiguration.class

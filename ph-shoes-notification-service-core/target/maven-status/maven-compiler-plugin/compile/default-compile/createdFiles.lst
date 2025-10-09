@@ -1,0 +1,13 @@
+com\nimbly\phshoesbackend\notification\core\exception\NotificationSendException.class
+com\nimbly\phshoesbackend\notification\core\dto\EmailAddress$EmailAddressBuilder.class
+com\nimbly\phshoesbackend\notification\core\dto\Attachment$AttachmentBuilder.class
+com\nimbly\phshoesbackend\notification\core\dto\Attachment.class
+com\nimbly\phshoesbackend\notification\core\dto\EmailRequest$EmailRequestBuilder.class
+com\nimbly\phshoesbackend\notification\core\dto\SendResult$SendResultBuilder.class
+com\nimbly\phshoesbackend\notification\core\dto\NotificationEventType.class
+com\nimbly\phshoesbackend\notification\core\dto\SendResult.class
+com\nimbly\phshoesbackend\notification\core\dto\NotificationEvent.class
+com\nimbly\phshoesbackend\notification\core\dto\EmailAddress.class
+com\nimbly\phshoesbackend\notification\core\dto\EmailRequest.class
+com\nimbly\phshoesbackend\notification\core\dto\NotificationEvent$NotificationEventBuilder.class
+com\nimbly\phshoesbackend\notification\core\service\NotificationService.class
