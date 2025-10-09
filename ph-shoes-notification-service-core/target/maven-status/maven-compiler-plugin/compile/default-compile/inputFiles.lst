@@ -1,0 +1,8 @@
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\dto\Attachment.java
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\dto\EmailAddress.java
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\dto\EmailRequest.java
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\dto\NotificationEvent.java
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\dto\NotificationEventType.java
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\dto\SendResult.java
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\exception\NotificationSendException.java
+C:\Users\nimbl\Projects\ph-shoes-services\ph-shoes-notification-service\ph-shoes-notification-service-core\src\main\java\com\nimbly\phshoesbackend\notification\core\service\NotificationService.java

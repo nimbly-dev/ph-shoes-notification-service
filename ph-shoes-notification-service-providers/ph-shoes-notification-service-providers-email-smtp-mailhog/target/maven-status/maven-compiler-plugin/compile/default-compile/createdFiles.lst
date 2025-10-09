@@ -1,0 +1,3 @@
+com\nimbly\phshoesbackend\notification\email\providers\smtp\config\SmtpNotificationAutoConfiguration.class
+com\nimbly\phshoesbackend\notification\email\providers\smtp\config\NotificationSmtpProps.class
+com\nimbly\phshoesbackend\notification\email\providers\smtp\service\SmtpNotificationServiceImpl.class
