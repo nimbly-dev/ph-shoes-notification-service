@@ -15,17 +15,9 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
         </processorPath>
-        <module name="ph-shoes-notification-service-web" />
-      </profile>
-      <profile name="Annotation profile for ph-shoes-notification-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar" />
-        </processorPath>
         <module name="ph-shoes-notification-service-core" />
         <module name="ph-shoes-notification-providers-email-ses" />
+        <module name="ph-shoes-notification-service-web" />
         <module name="ph-shoes-notification-providers-email-smptp-mailhog" />
       </profile>
     </annotationProcessing>

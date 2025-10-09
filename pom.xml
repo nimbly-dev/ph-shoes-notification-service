@@ -75,6 +75,11 @@
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/nimbly-dev/ph-shoes-notification-service</url>
         </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages (Snapshots)</name>
+            <url>https://maven.pkg.github.com/nimbly-dev/ph-shoes-notification-service</url>
+        </snapshotRepository>
     </distributionManagement>
 
 
