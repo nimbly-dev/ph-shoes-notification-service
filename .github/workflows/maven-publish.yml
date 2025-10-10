@@ -1,5 +1,9 @@
 name: Maven Package
+
 on:
+  push:
+    branches: [ main ]        # build on pushes to main (optional but handy)
+    tags:     [ "v*" ]        # build on version tags
   release: { types: [created] }
   workflow_dispatch:
 
@@ -10,23 +14,26 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # needed by the generated settings.xml
     steps:
       - uses: actions/checkout@v4
-      - name: Configure Maven settings.xml
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<'XML'
-          <settings>
-            <servers>
-              <server>
-                <id>github</id>
-                <username>${env.GITHUB_ACTOR}</username>
-                <password>${env.GITHUB_TOKEN}</password>
-              </server>
-            </servers>
-          </settings>
-          XML
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Sets up JDK AND writes a Maven settings.xml with a <server id="github">
+      - name: Set up Temurin JDK 21 + Maven settings
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'        # or '17' to match your project
+          cache: maven
+          server-id: github         # must match <id> in your POM's <distributionManagement>
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+
+      - name: Verify toolchain
+        run: |
+          java -version
+          mvn -v
+
+      - name: Build & Publish
+        run: mvn -B -U -DskipTests deploy
