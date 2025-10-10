@@ -8,7 +8,7 @@
         <artifactId>ph-shoes-notification-service-providers</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>ph-shoes-notification-providers-email-smptp-mailhog</artifactId>
+    <artifactId>ph-shoes-notification-providers-email-smtp-mailhog</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
