@@ -18,12 +18,12 @@ public class SesNotificationAutoConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "notification.ses")
-    NotificationSesProps notificationSesProps() {
+    public NotificationSesProps notificationSesProps() {
         return new NotificationSesProps();
     }
 
     @Bean
-    SesV2Client sesV2Client(NotificationSesProps props) {
+    public SesV2Client sesV2Client(NotificationSesProps props) {
         return SesV2Client.builder()
                 .region(Region.of(props.getRegion()))
                 .credentialsProvider(DefaultCredentialsProvider.create())
@@ -31,7 +31,7 @@ public class SesNotificationAutoConfiguration {
     }
 
     @Bean
-    NotificationService notificationService(SesV2Client ses, NotificationSesProps props, ObjectMapper mapper) {
+    public NotificationService notificationService(SesV2Client ses, NotificationSesProps props, ObjectMapper mapper) {
         return new SesNotificationServiceImpl(ses, props, mapper);
     }
 }
