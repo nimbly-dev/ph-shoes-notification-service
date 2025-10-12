@@ -8,6 +8,8 @@ import com.nimbly.phshoesbackend.notification.core.dto.SendResult;
 import com.nimbly.phshoesbackend.notification.core.exception.NotificationSendException;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.config.NotificationSesProps;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.model.*;
 
@@ -15,6 +17,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+@Service
+@Slf4j
 public class SesNotificationServiceImpl implements NotificationService {
 
     private final SesV2Client ses;
