@@ -13,7 +13,7 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 
-@Configuration
+@AutoConfiguration
 @ConditionalOnProperty(name = "notification.provider", havingValue = "ses")
 @ConditionalOnMissingBean(NotificationService.class)
 public class SesNotificationAutoConfiguration {

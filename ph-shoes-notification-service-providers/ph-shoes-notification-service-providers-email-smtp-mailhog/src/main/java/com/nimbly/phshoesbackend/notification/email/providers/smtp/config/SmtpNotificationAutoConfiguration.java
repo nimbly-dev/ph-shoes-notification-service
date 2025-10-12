@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 
-@Configuration
+@AutoConfiguration
 @ConditionalOnProperty(name = "notification.provider", havingValue = "smtp")
 @ConditionalOnMissingBean(NotificationService.class)
 public class SmtpNotificationAutoConfiguration {
