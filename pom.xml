@@ -71,11 +71,11 @@
 
     <distributionManagement>
         <repository>
-            <id>github-nimbly-notification</id>
+            <id>github-nimbly</id>
             <url>https://maven.pkg.github.com/nimbly-dev/ph-shoes-notification-service</url>
         </repository>
         <snapshotRepository>
-            <id>github-nimbly-notification</id>
+            <id>github-nimbly</id>
             <url>https://maven.pkg.github.com/nimbly-dev/ph-shoes-notification-service</url>
         </snapshotRepository>
     </distributionManagement>
