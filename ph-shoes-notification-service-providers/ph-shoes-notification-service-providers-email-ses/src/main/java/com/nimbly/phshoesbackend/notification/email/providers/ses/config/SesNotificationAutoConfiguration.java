@@ -20,6 +20,7 @@ import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.SesV2ClientBuilder;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.net.URI;
 import java.time.Duration;
 
@@ -48,22 +49,23 @@ public class SesNotificationAutoConfiguration {
                 : System.getProperty("AWS_REGION",
                 System.getenv().getOrDefault("AWS_REGION", "ap-southeast-1"));
 
-        SesV2ClientBuilder builder = SesV2Client.builder()
+        SesV2ClientBuilder b = SesV2Client.builder()
                 .httpClient(http)
                 .overrideConfiguration(override)
                 .region(Region.of(regionStr))
                 .credentialsProvider(DefaultCredentialsProvider.create());
 
-        URI endpoint = normalizeEndpoint(infra.getEndpoint());
-        if (endpoint != null) {
-            builder = builder
-                    .endpointOverride(endpoint)
-                    // LocalStack-friendly static creds
-                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")));
+        ResolvedEndpoint resolved = resolveEndpoint(infra.getEndpoint());
+        if (resolved.uri != null) {
+            b = b.endpointOverride(resolved.uri)
+                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test","test")));
         }
 
-        SesV2Client client = builder.build();
-        log.info("[SES] region={} endpoint={}", regionStr, endpoint == null ? "(aws)" : endpoint);
+        SesV2Client client = b.build();
+        log.info("[SES] region={} endpoint={} (reason: {})",
+                regionStr,
+                resolved.uri == null ? "(aws)" : resolved.uri,
+                resolved.reason);
         return client;
     }
 
@@ -78,22 +80,55 @@ public class SesNotificationAutoConfiguration {
         return new SesNotificationServiceImpl(ses, emailProps, infraProps, mapper);
     }
 
-    /** Ensure scheme/port and map 'localstack' -> 'localhost' when running outside containers. */
-    private static URI normalizeEndpoint(String raw) {
-        if (raw == null || raw.isBlank()) return null;
+    // ---------- helpers ----------
 
+    private record ResolvedEndpoint(URI uri, String reason) {}
+
+    private static ResolvedEndpoint resolveEndpoint(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return new ResolvedEndpoint(null, "no endpoint override");
+        }
+
+        // add scheme if missing
         String url = raw.matches("^[a-zA-Z]+://.*") ? raw : "http://" + raw;
 
         boolean inContainer = new File("/.dockerenv").exists();
-        if (url.startsWith("http://localstack") && !inContainer) {
-            url = url.replaceFirst("http://localstack", "http://localhost");
-        }
+        String host = URI.create(url).getHost();
+        int port = URI.create(url).getPort();
 
-        // Add default LocalStack edge port if none specified
-        if (url.matches("^http://(localhost|localstack)(/.*)?$")) {
+        // default LocalStack port if none provided
+        if (port == -1 && ("localhost".equals(host) || "localstack".equals(host))) {
             url = url.replaceFirst("^(http://[^/:]+)", "$1:4566");
+            host = URI.create(url).getHost();
+            port = URI.create(url).getPort();
         }
 
-        return URI.create(url);
+        // Host JVM: translate localstack -> localhost
+        if (!inContainer && "localstack".equalsIgnoreCase(host)) {
+            String mapped = url.replaceFirst("://localstack", "://localhost");
+            return new ResolvedEndpoint(URI.create(mapped), "host maps localstack→localhost");
+        }
+
+        // In container: ensure localstack DNS actually resolves; if not, fall back to host.docker.internal
+        if (inContainer && "localstack".equalsIgnoreCase(host)) {
+            if (!resolves(host)) {
+                String fallback = url.replaceFirst("://localstack", "://host.docker.internal");
+                return new ResolvedEndpoint(URI.create(fallback), "container fallback to host.docker.internal");
+            }
+        }
+
+        // Also guard against someone passing just "localstack" with no scheme/port
+        if ("localstack".equalsIgnoreCase(host) && !resolves(host)) {
+            // If we got here, we're probably on the host (or miswired container).
+            String mapped = url.replaceFirst("://localstack", inContainer ? "://host.docker.internal" : "://localhost");
+            if (!mapped.contains(":")) mapped = mapped.replaceFirst("^(http://[^/]+)", "$1:4566");
+            return new ResolvedEndpoint(URI.create(mapped), "auto-mapped unresolved localstack");
+        }
+
+        return new ResolvedEndpoint(URI.create(url), "as-configured");
+    }
+
+    private static boolean resolves(String h) {
+        try { InetAddress.getByName(h); return true; } catch (Exception ignored) { return false; }
     }
 }
