@@ -3,6 +3,7 @@ package com.nimbly.phshoesbackend.notification.email.providers.ses.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.service.SesNotificationServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,6 +22,7 @@ import software.amazon.awssdk.services.sesv2.SesV2ClientBuilder;
 import java.net.URI;
 import java.time.Duration;
 
+@Slf4j
 @AutoConfiguration
 @ConditionalOnProperty(name = "notification.provider", havingValue = "ses")
 @EnableConfigurationProperties({ NotificationSesProps.class, NotificationSesEmailProps.class })
@@ -54,10 +56,12 @@ public class SesNotificationAutoConfiguration {
         if (infra.getEndpoint() != null && !infra.getEndpoint().isBlank()) {
             builder = builder.endpointOverride(URI.create(infra.getEndpoint()))
                     .credentialsProvider(StaticCredentialsProvider.create(
-                            AwsBasicCredentials.create("test", "test"))); // LocalStack-friendly
+                            AwsBasicCredentials.create("test", "test")));
         }
 
-        return builder.build();
+        SesV2Client client = builder.build();
+        log.info("[SES] region=" + regionStr + " endpoint=" + infra.getEndpoint());
+        return client;
     }
 
     @Bean
