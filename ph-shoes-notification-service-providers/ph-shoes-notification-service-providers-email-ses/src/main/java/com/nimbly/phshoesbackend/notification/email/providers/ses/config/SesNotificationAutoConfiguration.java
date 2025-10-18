@@ -3,10 +3,8 @@ package com.nimbly.phshoesbackend.notification.email.providers.ses.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.service.SesNotificationServiceImpl;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,9 +64,9 @@ public class SesNotificationAutoConfiguration {
     public NotificationService notificationService(
             SesV2Client ses,
             NotificationSesEmailProps emailProps,
+            NotificationSesProps infraProps,
             ObjectMapper mapper
     ) {
-        // Your service already expects (SesV2Client, NotificationSesProps, ObjectMapper)
-        return new SesNotificationServiceImpl(ses, emailProps, mapper);
+        return new SesNotificationServiceImpl(ses, emailProps, infraProps, mapper);
     }
 }
