@@ -19,8 +19,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.SesV2ClientBuilder;
 
-import java.io.File;
-import java.net.InetAddress;
 import java.net.URI;
 import java.time.Duration;
 
@@ -32,103 +30,65 @@ public class SesNotificationAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(SesV2Client.class)
-    public SesV2Client sesV2Client(NotificationSesProps infra) {
-        SdkHttpClient http = ApacheHttpClient.builder()
+    public SesV2Client sesV2Client(NotificationSesProps infraProperties) {
+        SdkHttpClient httpClient = ApacheHttpClient.builder()
                 .maxConnections(50)
                 .connectionTimeout(Duration.ofSeconds(2))
                 .socketTimeout(Duration.ofSeconds(5))
                 .build();
 
-        ClientOverrideConfiguration override = ClientOverrideConfiguration.builder()
+        ClientOverrideConfiguration overrideConfiguration = ClientOverrideConfiguration.builder()
                 .apiCallAttemptTimeout(Duration.ofSeconds(3))
                 .apiCallTimeout(Duration.ofSeconds(10))
                 .build();
 
-        String regionStr = (infra.getRegion() != null && !infra.getRegion().isBlank())
-                ? infra.getRegion()
+        String regionName = (infraProperties.getRegion() != null && !infraProperties.getRegion().isBlank())
+                ? infraProperties.getRegion()
                 : System.getProperty("AWS_REGION",
                 System.getenv().getOrDefault("AWS_REGION", "ap-southeast-1"));
 
-        SesV2ClientBuilder b = SesV2Client.builder()
-                .httpClient(http)
-                .overrideConfiguration(override)
-                .region(Region.of(regionStr))
+        SesV2ClientBuilder clientBuilder = SesV2Client.builder()
+                .httpClient(httpClient)
+                .overrideConfiguration(overrideConfiguration)
+                .region(Region.of(regionName))
                 .credentialsProvider(DefaultCredentialsProvider.create());
 
-        ResolvedEndpoint resolved = resolveEndpoint(infra.getEndpoint());
-        if (resolved.uri != null) {
-            b = b.endpointOverride(resolved.uri)
-                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test","test")));
+        URI endpointUri = normalizeEndpoint(infraProperties.getEndpoint());
+        if (endpointUri != null) {
+            clientBuilder = clientBuilder
+                    .endpointOverride(endpointUri)
+                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")));
         }
 
-        SesV2Client client = b.build();
-        log.info("[SES] region={} endpoint={} (reason: {})",
-                regionStr,
-                resolved.uri == null ? "(aws)" : resolved.uri,
-                resolved.reason);
-        return client;
+        SesV2Client sesClient = clientBuilder.build();
+        log.info("[SES] region={} endpoint={}", regionName, endpointUri == null ? "(aws)" : endpointUri);
+        return sesClient;
     }
 
     @Bean
     @ConditionalOnMissingBean(NotificationService.class)
     public NotificationService notificationService(
-            SesV2Client ses,
-            NotificationSesEmailProps emailProps,
-            NotificationSesProps infraProps,
-            ObjectMapper mapper
+            SesV2Client sesClient,
+            NotificationSesEmailProps emailProperties,
+            NotificationSesProps infraProperties,
+            ObjectMapper objectMapper
     ) {
-        return new SesNotificationServiceImpl(ses, emailProps, infraProps, mapper);
+        return new SesNotificationServiceImpl(sesClient, emailProperties, infraProperties, objectMapper);
     }
 
-    // ---------- helpers ----------
+    private static URI normalizeEndpoint(String rawEndpoint) {
+        if (rawEndpoint == null || rawEndpoint.isBlank()) return null;
 
-    private record ResolvedEndpoint(URI uri, String reason) {}
+        String urlWithScheme = rawEndpoint.matches("^[a-zA-Z]+://.*") ? rawEndpoint : "http://" + rawEndpoint;
+        URI initialUri = URI.create(urlWithScheme);
 
-    private static ResolvedEndpoint resolveEndpoint(String raw) {
-        if (raw == null || raw.isBlank()) {
-            return new ResolvedEndpoint(null, "no endpoint override");
+        boolean needsDefaultPort = initialUri.getPort() == -1
+                && ("localhost".equalsIgnoreCase(initialUri.getHost()) || "localstack".equalsIgnoreCase(initialUri.getHost()));
+
+        if (needsDefaultPort) {
+            urlWithScheme = urlWithScheme.replaceFirst("^(http://[^/:]+)", "$1:4566");
         }
 
-        // add scheme if missing
-        String url = raw.matches("^[a-zA-Z]+://.*") ? raw : "http://" + raw;
-
-        boolean inContainer = new File("/.dockerenv").exists();
-        String host = URI.create(url).getHost();
-        int port = URI.create(url).getPort();
-
-        // default LocalStack port if none provided
-        if (port == -1 && ("localhost".equals(host) || "localstack".equals(host))) {
-            url = url.replaceFirst("^(http://[^/:]+)", "$1:4566");
-            host = URI.create(url).getHost();
-            port = URI.create(url).getPort();
-        }
-
-        // Host JVM: translate localstack -> localhost
-        if (!inContainer && "localstack".equalsIgnoreCase(host)) {
-            String mapped = url.replaceFirst("://localstack", "://localhost");
-            return new ResolvedEndpoint(URI.create(mapped), "host maps localstack→localhost");
-        }
-
-        // In container: ensure localstack DNS actually resolves; if not, fall back to host.docker.internal
-        if (inContainer && "localstack".equalsIgnoreCase(host)) {
-            if (!resolves(host)) {
-                String fallback = url.replaceFirst("://localstack", "://host.docker.internal");
-                return new ResolvedEndpoint(URI.create(fallback), "container fallback to host.docker.internal");
-            }
-        }
-
-        // Also guard against someone passing just "localstack" with no scheme/port
-        if ("localstack".equalsIgnoreCase(host) && !resolves(host)) {
-            // If we got here, we're probably on the host (or miswired container).
-            String mapped = url.replaceFirst("://localstack", inContainer ? "://host.docker.internal" : "://localhost");
-            if (!mapped.contains(":")) mapped = mapped.replaceFirst("^(http://[^/]+)", "$1:4566");
-            return new ResolvedEndpoint(URI.create(mapped), "auto-mapped unresolved localstack");
-        }
-
-        return new ResolvedEndpoint(URI.create(url), "as-configured");
-    }
-
-    private static boolean resolves(String h) {
-        try { InetAddress.getByName(h); return true; } catch (Exception ignored) { return false; }
+        return URI.create(urlWithScheme);
     }
 }
