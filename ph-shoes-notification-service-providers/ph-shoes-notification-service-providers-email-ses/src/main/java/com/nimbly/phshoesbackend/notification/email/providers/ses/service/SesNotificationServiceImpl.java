@@ -1,31 +1,28 @@
 package com.nimbly.phshoesbackend.notification.email.providers.ses.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbly.phshoesbackend.notification.core.dto.EmailAddress;
 import com.nimbly.phshoesbackend.notification.core.dto.EmailRequest;
 import com.nimbly.phshoesbackend.notification.core.dto.SendResult;
 import com.nimbly.phshoesbackend.notification.core.exception.NotificationSendException;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
-import com.nimbly.phshoesbackend.notification.email.providers.ses.config.NotificationSesProps;
+import com.nimbly.phshoesbackend.notification.email.providers.ses.config.NotificationSesEmailProps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.model.*;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
 public class SesNotificationServiceImpl implements NotificationService {
 
     private final SesV2Client ses;
-    private final NotificationSesProps props;
+    private final NotificationSesEmailProps props;
     private final ObjectMapper mapper;
 
-    public SesNotificationServiceImpl(SesV2Client ses, NotificationSesProps props, ObjectMapper mapper) {
+    public SesNotificationServiceImpl(SesV2Client ses, NotificationSesEmailProps props, ObjectMapper mapper) {
         this.ses = ses;
         this.props = props;
         this.mapper = mapper;

@@ -11,7 +11,7 @@
     </parent>
     <packaging>pom</packaging>
     <modules>
-        <module>ph-shoes-notification-service-providers-email-smtp-mailhog</module>
+<!--        <module>ph-shoes-notification-service-providers-email-smtp-mailhog</module>-->
         <module>ph-shoes-notification-service-providers-email-ses</module>
     </modules>
 

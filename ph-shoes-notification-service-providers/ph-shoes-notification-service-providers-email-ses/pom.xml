@@ -29,26 +29,32 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- AWS SDK v2: SESv2 (version comes from parent BOM or property) -->
+        <!-- AWS SDK v2: SESv2 -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>sesv2</artifactId>
         </dependency>
 
-        <!-- Jackson (if you serialize templateVars to JSON in-provider) -->
+        <!-- ADD THIS: AWS SDK v2 Apache HTTP client (provides ApacheHttpClient) -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+        </dependency>
+
+        <!-- Jackson (if needed) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <!-- Lombok (optional) -->
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Metadata for @ConfigurationProperties (optional, not runtime) -->
+        <!-- Metadata for @ConfigurationProperties -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
