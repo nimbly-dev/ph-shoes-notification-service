@@ -19,6 +19,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.SesV2ClientBuilder;
 
+import java.io.File;
 import java.net.URI;
 import java.time.Duration;
 
@@ -53,14 +54,16 @@ public class SesNotificationAutoConfiguration {
                 .region(Region.of(regionStr))
                 .credentialsProvider(DefaultCredentialsProvider.create());
 
-        if (infra.getEndpoint() != null && !infra.getEndpoint().isBlank()) {
-            builder = builder.endpointOverride(URI.create(infra.getEndpoint()))
-                    .credentialsProvider(StaticCredentialsProvider.create(
-                            AwsBasicCredentials.create("test", "test")));
+        URI endpoint = normalizeEndpoint(infra.getEndpoint());
+        if (endpoint != null) {
+            builder = builder
+                    .endpointOverride(endpoint)
+                    // LocalStack-friendly static creds
+                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")));
         }
 
         SesV2Client client = builder.build();
-        log.info("[SES] region=" + regionStr + " endpoint=" + infra.getEndpoint());
+        log.info("[SES] region={} endpoint={}", regionStr, endpoint == null ? "(aws)" : endpoint);
         return client;
     }
 
@@ -73,5 +76,24 @@ public class SesNotificationAutoConfiguration {
             ObjectMapper mapper
     ) {
         return new SesNotificationServiceImpl(ses, emailProps, infraProps, mapper);
+    }
+
+    /** Ensure scheme/port and map 'localstack' -> 'localhost' when running outside containers. */
+    private static URI normalizeEndpoint(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+
+        String url = raw.matches("^[a-zA-Z]+://.*") ? raw : "http://" + raw;
+
+        boolean inContainer = new File("/.dockerenv").exists();
+        if (url.startsWith("http://localstack") && !inContainer) {
+            url = url.replaceFirst("http://localstack", "http://localhost");
+        }
+
+        // Add default LocalStack edge port if none specified
+        if (url.matches("^http://(localhost|localstack)(/.*)?$")) {
+            url = url.replaceFirst("^(http://[^/:]+)", "$1:4566");
+        }
+
+        return URI.create(url);
     }
 }
