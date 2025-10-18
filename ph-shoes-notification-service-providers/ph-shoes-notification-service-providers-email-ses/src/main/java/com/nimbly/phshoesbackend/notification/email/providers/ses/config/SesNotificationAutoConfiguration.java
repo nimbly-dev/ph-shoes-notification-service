@@ -3,11 +3,11 @@ package com.nimbly.phshoesbackend.notification.email.providers.ses.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.service.SesNotificationServiceImpl;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -21,13 +21,13 @@ import software.amazon.awssdk.services.sesv2.SesV2ClientBuilder;
 import java.net.URI;
 import java.time.Duration;
 
-@Configuration
+@AutoConfiguration
 @ConditionalOnProperty(name = "notification.provider", havingValue = "ses")
-@ConditionalOnMissingBean(NotificationService.class)
 @EnableConfigurationProperties({ NotificationSesProps.class, NotificationSesEmailProps.class })
 public class SesNotificationAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(SesV2Client.class)
     public SesV2Client sesV2Client(NotificationSesProps infra) {
         SdkHttpClient http = ApacheHttpClient.builder()
                 .maxConnections(50)
@@ -61,6 +61,7 @@ public class SesNotificationAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(NotificationService.class)
     public NotificationService notificationService(
             SesV2Client ses,
             NotificationSesEmailProps emailProps,
