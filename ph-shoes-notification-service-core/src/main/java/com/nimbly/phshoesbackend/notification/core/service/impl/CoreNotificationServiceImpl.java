@@ -7,7 +7,9 @@ import com.nimbly.phshoesbackend.notification.core.model.dto.SendResult;
 import com.nimbly.phshoesbackend.notification.core.service.EmailCompositionService;
 import com.nimbly.phshoesbackend.notification.core.service.EmailTransportService;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CoreNotificationServiceImpl implements NotificationService {
 
     private final EmailCompositionService composer;

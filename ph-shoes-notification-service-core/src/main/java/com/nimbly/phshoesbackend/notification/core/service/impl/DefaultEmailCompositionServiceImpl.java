@@ -7,7 +7,9 @@ import com.nimbly.phshoesbackend.notification.core.service.EmailCompositionServi
 import com.nimbly.phshoesbackend.notification.core.util.EmailAddressFormatter;
 import com.nimbly.phshoesbackend.notification.core.util.EmailSubjectFormatter;
 import com.nimbly.phshoesbackend.notification.core.util.RawMimeBuilder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DefaultEmailCompositionServiceImpl implements EmailCompositionService {
 
     private final NotificationEmailProps emailProps;

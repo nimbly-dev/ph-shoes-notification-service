@@ -8,11 +8,13 @@ import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
+@Service
 public class SmtpEmailTransportServiceImpl implements EmailTransportService {
 
     private final JavaMailSender mailSender;
