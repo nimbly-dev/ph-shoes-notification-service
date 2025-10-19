@@ -24,3 +24,7 @@ hs_err_pid*
 replay_pid*
 *.iml
 jarRepositories.xml
+.idea
+.idea/*
+modules.xml
+compiler.xml

@@ -1,9 +1,9 @@
 package com.nimbly.phshoesbackend.notification.email.providers.ses.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbly.phshoesbackend.notification.core.dto.EmailAddress;
-import com.nimbly.phshoesbackend.notification.core.dto.EmailRequest;
-import com.nimbly.phshoesbackend.notification.core.dto.SendResult;
+import com.nimbly.phshoesbackend.notification.core.model.dto.EmailAddress;
+import com.nimbly.phshoesbackend.notification.core.model.dto.EmailRequest;
+import com.nimbly.phshoesbackend.notification.core.model.dto.SendResult;
 import com.nimbly.phshoesbackend.notification.core.exception.NotificationSendException;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.config.NotificationSesEmailProps;

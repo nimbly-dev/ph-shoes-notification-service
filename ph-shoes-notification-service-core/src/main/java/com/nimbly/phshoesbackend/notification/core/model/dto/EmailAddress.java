@@ -1,4 +1,4 @@
-package com.nimbly.phshoesbackend.notification.core.dto;
+package com.nimbly.phshoesbackend.notification.core.model.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

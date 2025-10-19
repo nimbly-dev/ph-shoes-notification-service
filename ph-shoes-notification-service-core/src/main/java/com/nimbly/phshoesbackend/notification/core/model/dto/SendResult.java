@@ -1,4 +1,4 @@
-package com.nimbly.phshoesbackend.notification.core.dto;
+package com.nimbly.phshoesbackend.notification.core.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
