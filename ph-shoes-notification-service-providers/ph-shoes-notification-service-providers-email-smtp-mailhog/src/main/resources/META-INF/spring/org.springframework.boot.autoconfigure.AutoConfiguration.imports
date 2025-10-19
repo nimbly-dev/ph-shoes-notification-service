@@ -1,1 +1,1 @@
-com.nimbly.phshoesbackend.notification.email.providers.smtp.config.SmtpNotificationAutoConfiguration
+com.nimbly.phshoesbackend.notification.email.providers.smtp.config.SmtpTransportAutoConfiguration
