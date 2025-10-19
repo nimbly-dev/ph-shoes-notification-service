@@ -1,16 +1,15 @@
 package com.nimbly.phshoesbackend.notification.email.providers.smtp.config;
 
+import com.nimbly.phshoesbackend.notification.core.model.props.NotificationTransportProps;
 import com.nimbly.phshoesbackend.notification.core.service.EmailTransportService;
 import com.nimbly.phshoesbackend.notification.email.providers.smtp.service.SmtpEmailTransportServiceImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
-
-import com.nimbly.phshoesbackend.notification.core.model.props.NotificationTransportProps;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;

@@ -8,8 +8,8 @@ import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
 import com.nimbly.phshoesbackend.notification.core.service.impl.CoreNotificationServiceImpl;
 import com.nimbly.phshoesbackend.notification.core.service.impl.DefaultEmailCompositionServiceImpl;
 import com.nimbly.phshoesbackend.notification.core.util.EmailAddressFormatter;
-import com.nimbly.phshoesbackend.notification.core.util.RawMimeBuilder;
 import com.nimbly.phshoesbackend.notification.core.util.EmailSubjectFormatter;
+import com.nimbly.phshoesbackend.notification.core.util.RawMimeBuilder;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties({ NotificationEmailProps.class, NotificationTransportProps.class })
 public class CoreNotificationAutoConfiguration {
 
+    // --- utilities ---
 
     @Bean
     @ConditionalOnMissingBean
@@ -39,6 +40,7 @@ public class CoreNotificationAutoConfiguration {
         return new RawMimeBuilder(emailProps, formatter);
     }
 
+    // --- composition ---
     @Bean
     @ConditionalOnMissingBean
     public EmailCompositionService emailCompositionService(NotificationEmailProps emailProps,
@@ -55,5 +57,4 @@ public class CoreNotificationAutoConfiguration {
                                                    EmailTransportService transportService) {
         return new CoreNotificationServiceImpl(compositionService, transportService);
     }
-
 }
