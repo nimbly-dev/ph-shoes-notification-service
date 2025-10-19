@@ -28,3 +28,4 @@ jarRepositories.xml
 .idea/*
 modules.xml
 compiler.xml
+target
