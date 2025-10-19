@@ -20,18 +20,27 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties({ NotificationEmailProps.class, NotificationTransportProps.class })
 public class CoreNotificationAutoConfiguration {
 
-    @Bean @ConditionalOnMissingBean
-    public EmailAddressFormatter emailAddressFormatter() { return new EmailAddressFormatter(); }
 
-    @Bean @ConditionalOnMissingBean
-    public EmailSubjectFormatter subjectFormatter() { return new EmailSubjectFormatter(); }
+    @Bean
+    @ConditionalOnMissingBean
+    public EmailAddressFormatter emailAddressFormatter() {
+        return new EmailAddressFormatter();
+    }
 
-    @Bean @ConditionalOnMissingBean
+    @Bean
+    @ConditionalOnMissingBean
+    public EmailSubjectFormatter subjectFormatter() {
+        return new EmailSubjectFormatter();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public RawMimeBuilder rawMimeBuilder(NotificationEmailProps emailProps, EmailAddressFormatter formatter) {
         return new RawMimeBuilder(emailProps, formatter);
     }
 
-    @Bean @ConditionalOnMissingBean
+    @Bean
+    @ConditionalOnMissingBean
     public EmailCompositionService emailCompositionService(NotificationEmailProps emailProps,
                                                            EmailSubjectFormatter subjectFormatter,
                                                            EmailAddressFormatter addressFormatter,
@@ -42,7 +51,9 @@ public class CoreNotificationAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(NotificationService.class)
     @ConditionalOnBean(EmailTransportService.class)
-    public NotificationService notificationService(EmailCompositionService compositionService, EmailTransportService transportService) {
+    public NotificationService notificationService(EmailCompositionService compositionService,
+                                                   EmailTransportService transportService) {
         return new CoreNotificationServiceImpl(compositionService, transportService);
     }
+
 }
