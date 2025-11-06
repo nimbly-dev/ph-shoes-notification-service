@@ -150,12 +150,8 @@ public class SesNotificationServiceImpl implements NotificationService {
         sb.append("MIME-Version: 1.0\r\n");
 
         // Optional unsubscribe headers only supported via RAW
-        if (emailProps.getListUnsubscribe() != null && !emailProps.getListUnsubscribe().isBlank()) {
-            sb.append("List-Unsubscribe: ").append(emailProps.getListUnsubscribe()).append("\r\n");
-        }
-        if (emailProps.getListUnsubscribePost() != null && !emailProps.getListUnsubscribePost().isBlank()) {
-            sb.append("List-Unsubscribe-Post: ").append(emailProps.getListUnsubscribePost()).append("\r\n");
-        }
+        appendHeader(sb, req, "List-Unsubscribe", emailProps.getListUnsubscribe());
+        appendHeader(sb, req, "List-Unsubscribe-Post", emailProps.getListUnsubscribePost());
 
         sb.append("Content-Type: multipart/mixed; boundary=\"").append(boundary).append("\"\r\n\r\n");
 
@@ -189,5 +185,26 @@ public class SesNotificationServiceImpl implements NotificationService {
         return RawMessage.builder()
                 .data(software.amazon.awssdk.core.SdkBytes.fromUtf8String(sb.toString()))
                 .build();
+    }
+
+    private static void appendHeader(StringBuilder sb, EmailRequest req, String headerName, String fallback) {
+        String value = resolveHeader(req.getHeaders(), headerName, fallback);
+        if (value != null && !value.isBlank()) {
+            sb.append(headerName).append(": ").append(value).append("\r\n");
+        }
+    }
+
+    private static String resolveHeader(Map<String, String> headers, String headerName, String fallback) {
+        if (headers != null) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                if (entry.getKey() != null
+                        && entry.getKey().equalsIgnoreCase(headerName)
+                        && entry.getValue() != null
+                        && !entry.getValue().isBlank()) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return fallback;
     }
 }
