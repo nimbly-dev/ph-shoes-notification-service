@@ -6,6 +6,7 @@ import com.nimbly.phshoesbackend.notification.core.model.props.NotificationEmail
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
+import java.util.Map;
 
 @Component
 public class RawMimeBuilder{
@@ -33,12 +34,8 @@ public class RawMimeBuilder{
         sb.append("Subject: ").append(finalSubject == null ? "" : finalSubject).append("\r\n");
         sb.append("MIME-Version: 1.0\r\n");
 
-        if (emailProps.getListUnsubscribe() != null && !emailProps.getListUnsubscribe().isBlank()) {
-            sb.append("List-Unsubscribe: ").append(emailProps.getListUnsubscribe()).append("\r\n");
-        }
-        if (emailProps.getListUnsubscribePost() != null && !emailProps.getListUnsubscribePost().isBlank()) {
-            sb.append("List-Unsubscribe-Post: ").append(emailProps.getListUnsubscribePost()).append("\r\n");
-        }
+        appendHeader(sb, request, "List-Unsubscribe", emailProps.getListUnsubscribe());
+        appendHeader(sb, request, "List-Unsubscribe-Post", emailProps.getListUnsubscribePost());
 
         boolean withAttachments = request.getAttachments() != null && !request.getAttachments().isEmpty();
         if (!withAttachments) {
@@ -73,5 +70,26 @@ public class RawMimeBuilder{
         }
 
         return sb.toString();
+    }
+
+    private static void appendHeader(StringBuilder sb, EmailRequest request, String headerName, String fallback) {
+        String value = resolveHeader(request.getHeaders(), headerName, fallback);
+        if (value != null && !value.isBlank()) {
+            sb.append(headerName).append(": ").append(value).append("\r\n");
+        }
+    }
+
+    private static String resolveHeader(Map<String, String> headers, String headerName, String fallback) {
+        if (headers != null) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                if (entry.getKey() != null
+                        && entry.getKey().equalsIgnoreCase(headerName)
+                        && entry.getValue() != null
+                        && !entry.getValue().isBlank()) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return fallback;
     }
 }
