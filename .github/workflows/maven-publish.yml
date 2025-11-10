@@ -30,10 +30,6 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
-      - name: Build commons snapshot
-        run: mvn -B -pl ph-shoes-services-common/ph-shoes-services-common-core -am install
-
-
       - name: Verify toolchain
         run: |
           java -version
