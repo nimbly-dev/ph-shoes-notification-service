@@ -41,6 +41,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.nimbly.phshoesbackend.commons</groupId>
+            <artifactId>ph-shoes-services-common-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
