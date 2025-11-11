@@ -15,16 +15,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # needed by the generated settings.xml
+      GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
-      # Sets up JDK AND writes a Maven settings.xml with a <server id="github">
+      - name: Check out commons shared library
+        uses: actions/checkout@v4
+        with:
+          repository: nimbly-dev/ph-shoes-services-common
+          path: ph-shoes-services-common
+
       - name: Set up Temurin JDK 21 + Maven settings
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'        # or '17' to match your project
+          java-version: '21'
           cache: maven
           server-id: github-nimbly
           server-username: GITHUB_ACTOR
@@ -34,6 +39,10 @@ jobs:
         run: |
           java -version
           mvn -v
+
+      - name: Build commons snapshot (installs dependency into local repo cache)
+        working-directory: ph-shoes-services-common
+        run: mvn -B -pl ph-shoes-services-common-core -am install
 
       - name: Build & Publish
         run: mvn -B -U -DskipTests deploy
