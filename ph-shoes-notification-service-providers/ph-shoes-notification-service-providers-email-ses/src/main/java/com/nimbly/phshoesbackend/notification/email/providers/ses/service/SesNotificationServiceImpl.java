@@ -52,15 +52,18 @@ public class SesNotificationServiceImpl implements NotificationService {
                         : emailProps.getSubjectPrefix() + " " + subject;
             }
 
-            // Content: template / raw (for attachments) / simple
+            boolean hasAttachments = hasAttachments(req);
+            boolean hasCustomHeaders = hasCustomHeaders(req);
+
+            // Content: template / raw (for attachments or custom headers) / simple
             EmailContent content;
-            if (req.getTemplateId() != null) {
+            if (req.getTemplateId() != null && !hasAttachments && !hasCustomHeaders) {
                 Template template = Template.builder()
                         .templateName(req.getTemplateId())
                         .templateData(req.getTemplateVars() == null ? "{}" : mapper.writeValueAsString(req.getTemplateVars()))
                         .build();
                 content = EmailContent.builder().template(template).build();
-            } else if (hasAttachments(req)) {
+            } else if (hasAttachments || hasCustomHeaders) {
                 content = EmailContent.builder().raw(buildRawMessage(req, subject)).build();
             } else {
                 Content subj = Content.builder().data(nullSafe(subject)).charset("UTF-8").build();
@@ -69,7 +72,7 @@ public class SesNotificationServiceImpl implements NotificationService {
                         .html(req.getHtmlBody() != null ? Content.builder().data(req.getHtmlBody()).charset("UTF-8").build() : null)
                         .build();
                 Message msg = Message.builder().subject(subj).body(body).build();
-                // NOTE: Simple() path does NOT support custom headers; use RAW if you need List-Unsubscribe, etc.
+                // NOTE: Simple() path does NOT support custom headers; raw path is forced when headers are present.
                 content = EmailContent.builder().simple(msg).build();
             }
 
@@ -129,6 +132,10 @@ public class SesNotificationServiceImpl implements NotificationService {
 
     private static boolean hasAttachments(EmailRequest req) {
         return req.getAttachments() != null && !req.getAttachments().isEmpty();
+    }
+
+    private static boolean hasCustomHeaders(EmailRequest req) {
+        return req.getHeaders() != null && !req.getHeaders().isEmpty();
     }
 
     private static String nullSafe(String s) { return s == null ? "" : s; }
