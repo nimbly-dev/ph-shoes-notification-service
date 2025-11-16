@@ -3,6 +3,7 @@ package com.nimbly.phshoesbackend.notification.core.config;
 import com.nimbly.phshoesbackend.notification.core.model.props.NotificationEmailProps;
 import com.nimbly.phshoesbackend.notification.core.model.props.NotificationTransportProps;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbly.phshoesbackend.notification.core.ses.SesWebhookController;
 import com.nimbly.phshoesbackend.notification.core.ses.SesWebhookProcessor;
 import com.nimbly.phshoesbackend.notification.core.ses.config.SesWebhookProperties;
 import com.nimbly.phshoesbackend.notification.core.service.EmailCompositionService;
@@ -18,6 +19,8 @@ import com.nimbly.phshoesbackend.services.common.core.security.EmailCrypto;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
@@ -74,5 +77,13 @@ public class CoreNotificationAutoConfiguration {
                                                    SesWebhookProperties sesWebhookProperties,
                                                    ObjectMapper objectMapper) {
         return new SesWebhookProcessor(suppressionRepository, emailCrypto, sesWebhookProperties, objectMapper);
+    }
+
+    @Bean
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnProperty(prefix = "notification.ses.webhook", name = "enabled", havingValue = "true")
+    @ConditionalOnMissingBean
+    public SesWebhookController sesWebhookController(SesWebhookProcessor sesWebhookProcessor) {
+        return new SesWebhookController(sesWebhookProcessor);
     }
 }
