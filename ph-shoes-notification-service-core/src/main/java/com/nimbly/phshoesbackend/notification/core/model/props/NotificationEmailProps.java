@@ -10,4 +10,5 @@ public class NotificationEmailProps {
     private String subjectPrefix;
     private String listUnsubscribe;
     private String listUnsubscribePost;
+    private String unsubscribeLink;
 }
