@@ -17,10 +17,11 @@
         <module name="ph-shoes-notification-service-core" />
         <module name="ph-shoes-notification-providers-email-ses" />
         <module name="ph-shoes-notification-service-web" />
-        <module name="ph-shoes-notification-providers-email-smptp-mailhog" />
+        <module name="ph-shoes-notification-providers-email-smtp-mailhog" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ph-shoes-notification-providers-email-smptp-mailhog" target="21" />
       <module name="ph-shoes-notification-service-messaging" target="21" />
       <module name="ph-shoes-user-account-service" target="21" />
     </bytecodeTargetLevel>
@@ -29,6 +30,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ph-shoes-notification-providers-email-ses" options="-parameters" />
       <module name="ph-shoes-notification-providers-email-smptp-mailhog" options="-parameters" />
+      <module name="ph-shoes-notification-providers-email-smtp-mailhog" options="-parameters" />
       <module name="ph-shoes-notification-service" options="-parameters" />
       <module name="ph-shoes-notification-service-core" options="-parameters" />
       <module name="ph-shoes-notification-service-messaging" options="-parameters" />

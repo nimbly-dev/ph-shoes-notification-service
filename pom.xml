@@ -4,12 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Spring Boot parent for sane plugin/dependency defaults -->
+    <!-- Inherit shared versions and Spring Boot setup from common starters -->
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
-        <relativePath/>
+        <groupId>com.nimbly.phshoesbackend.commons</groupId>
+        <artifactId>ph-shoes-starter-services</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.nimbly.phshoesbackend.notification</groupId>
@@ -18,12 +17,6 @@
     <packaging>pom</packaging>
     <name>ph-shoes-notification-service</name>
 
-    <properties>
-        <java.version>21</java.version>
-        <aws.sdk.version>2.33.1</aws.sdk.version>
-        <lombok.version>1.18.34</lombok.version>
-    </properties>
-
     <modules>
         <module>ph-shoes-notification-service-core</module>
 <!--        <module>ph-shoes-notification-service-messaging</module>-->
@@ -31,36 +24,8 @@
 <!--        <module>ph-shoes-notification-service-web</module>-->
     </modules>
 
-    <!-- Centralize only versions; put real deps in child modules -->
-    <dependencyManagement>
-        <dependencies>
-            <!-- AWS SDK v2 BOM so children don't repeat versions -->
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>bom</artifactId>
-                <version>${aws.sdk.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <plugins>
-            <!-- Lombok as annotation processor available to modules -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
             <!-- Keep Boot plugin so runnable modules can use it later -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
