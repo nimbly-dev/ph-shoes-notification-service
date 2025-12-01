@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ph-shoes-notification-service-core.iml" filepath="$PROJECT_DIR$/ph-shoes-notification-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ph-shoes-notification-service-providers/ph-shoes-notification-service-providers-email-smtp-mailhog/ph-shoes-notification-providers-email-smptp-mailhog.iml" filepath="$PROJECT_DIR$/ph-shoes-notification-service-providers/ph-shoes-notification-service-providers-email-smtp-mailhog/ph-shoes-notification-providers-email-smptp-mailhog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ph-shoes-notification-service-core/ph-shoes-notification-service-core.iml" filepath="$PROJECT_DIR$/ph-shoes-notification-service-core/ph-shoes-notification-service-core.iml" />
     </modules>
   </component>
 </project>

@@ -1,13 +1,14 @@
 package com.nimbly.phshoesbackend.notification.core.ses;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.mockito.Mockito.doThrow;
@@ -15,15 +16,19 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(SesWebhookController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 class SesWebhookControllerTest {
 
-    @Autowired
+    @Mock
+    private SesWebhookProcessor sesWebhookProcessor;
+
     private MockMvc mockMvc;
 
-    @MockBean
-    private SesWebhookProcessor sesWebhookProcessor;
+    @BeforeEach
+    void setUp() {
+        SesWebhookController controller = new SesWebhookController(sesWebhookProcessor);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
 
     @Test
     void forwardsPayloadToProcessor() throws Exception {

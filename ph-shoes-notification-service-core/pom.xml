@@ -29,9 +29,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>4.5.0</version>
         </dependency>
 
         <dependency>
@@ -42,7 +46,7 @@
 
         <dependency>
             <groupId>com.nimbly.phshoesbackend.commons</groupId>
-            <artifactId>ph-shoes-services-common-core</artifactId>
+            <artifactId>ph-shoes-starter-services-common-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
