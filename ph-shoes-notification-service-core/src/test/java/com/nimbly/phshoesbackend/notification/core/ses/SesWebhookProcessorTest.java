@@ -2,10 +2,10 @@ package com.nimbly.phshoesbackend.notification.core.ses;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbly.phshoesbackend.notification.core.ses.config.SesWebhookProperties;
-import com.nimbly.phshoesbackend.services.common.core.model.SuppressionEntry;
-import com.nimbly.phshoesbackend.services.common.core.model.SuppressionReason;
-import com.nimbly.phshoesbackend.services.common.core.repository.SuppressionRepository;
-import com.nimbly.phshoesbackend.services.common.core.security.EmailCrypto;
+import com.nimbly.phshoesbackend.commons.core.model.SuppressionEntry;
+import com.nimbly.phshoesbackend.commons.core.model.SuppressionReason;
+import com.nimbly.phshoesbackend.commons.core.repository.SuppressionRepository;
+import com.nimbly.phshoesbackend.commons.core.security.EmailCrypto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

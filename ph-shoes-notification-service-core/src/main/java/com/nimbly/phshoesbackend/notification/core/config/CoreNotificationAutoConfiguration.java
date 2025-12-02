@@ -14,8 +14,8 @@ import com.nimbly.phshoesbackend.notification.core.service.impl.DefaultEmailComp
 import com.nimbly.phshoesbackend.notification.core.util.EmailAddressFormatter;
 import com.nimbly.phshoesbackend.notification.core.util.EmailSubjectFormatter;
 import com.nimbly.phshoesbackend.notification.core.util.RawMimeBuilder;
-import com.nimbly.phshoesbackend.services.common.core.repository.SuppressionRepository;
-import com.nimbly.phshoesbackend.services.common.core.security.EmailCrypto;
+import com.nimbly.phshoesbackend.commons.core.repository.SuppressionRepository;
+import com.nimbly.phshoesbackend.commons.core.security.EmailCrypto;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
