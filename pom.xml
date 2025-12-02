@@ -6,7 +6,7 @@
 
     <!-- Inherit shared versions and Spring Boot setup from common starters -->
     <parent>
-        <groupId>com.nimbly.phshoesbackend.commons</groupId>
+        <groupId>com.nimbly.phshoesbackend.starters</groupId>
         <artifactId>ph-shoes-starter-services</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
