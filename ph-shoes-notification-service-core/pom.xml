@@ -45,7 +45,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nimbly.phshoesbackend.commons</groupId>
+            <groupId>com.nimbly.phshoesbackend.starters</groupId>
             <artifactId>ph-shoes-starter-services-common-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

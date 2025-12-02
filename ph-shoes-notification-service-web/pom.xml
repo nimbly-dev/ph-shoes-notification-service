@@ -16,12 +16,12 @@
     <dependencies>
         <!-- Common starters: web + security behaviours -->
         <dependency>
-            <groupId>com.nimbly.phshoesbackend.commons</groupId>
+            <groupId>com.nimbly.phshoesbackend.starters</groupId>
             <artifactId>ph-shoes-starter-services-common-web</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.nimbly.phshoesbackend.commons</groupId>
+            <groupId>com.nimbly.phshoesbackend.starters</groupId>
             <artifactId>ph-shoes-starter-services-common-security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
