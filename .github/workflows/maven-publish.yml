@@ -19,11 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check out commons shared library
+      - name: Check out starter shared library
         uses: actions/checkout@v4
         with:
-          repository: nimbly-dev/ph-shoes-services-common
-          path: ph-shoes-services-common
+          repository: nimbly-dev/ph-shoes-starter-services
+          path: ph-shoes-starter-services
 
       - name: Set up Temurin JDK 21 + Maven settings
         uses: actions/setup-java@v4
@@ -40,9 +40,9 @@ jobs:
           java -version
           mvn -v
 
-      - name: Build commons snapshot (installs dependency into local repo cache)
-        working-directory: ph-shoes-services-common
-        run: mvn -B -pl ph-shoes-services-common-core -am install
+      - name: Build starter snapshot (installs dependency into local repo cache)
+        working-directory: ph-shoes-starter-services
+        run: mvn -B -pl ph-shoes-starter-services-common-core -am install
 
       - name: Build & Publish
         run: mvn -B -U -DskipTests deploy
