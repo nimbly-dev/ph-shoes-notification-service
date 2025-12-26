@@ -1,10 +1,14 @@
 package com.nimbly.phshoesbackend.notification.email.providers.ses.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbly.phshoesbackend.notification.core.service.EmailTransportService;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.service.SesNotificationServiceImpl;
+import com.nimbly.phshoesbackend.notification.email.providers.ses.service.SesV2EmailTransport;
+import com.nimbly.phshoesbackend.notification.email.providers.ses.util.TemplateJsonSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -63,6 +67,15 @@ public class SesNotificationAutoConfiguration {
         SesV2Client sesClient = clientBuilder.build();
         log.info("[SES] region={} endpoint={}", regionName, endpointUri == null ? "(aws)" : endpointUri);
         return sesClient;
+    }
+
+    @Bean
+    @ConditionalOnExpression("'${notification.transport:}'=='ses' or '${notification.transport:}'=='sesv2'")
+    @ConditionalOnMissingBean(EmailTransportService.class)
+    public EmailTransportService sesV2EmailTransport(SesV2Client sesClient,
+                                                     NotificationSesProps props,
+                                                     TemplateJsonSerializer json) {
+        return new SesV2EmailTransport(sesClient, props, json);
     }
 
     @Bean

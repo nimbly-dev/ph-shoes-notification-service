@@ -6,8 +6,6 @@ import com.nimbly.phshoesbackend.notification.core.model.dto.SendResult;
 import com.nimbly.phshoesbackend.notification.core.service.EmailTransportService;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.config.NotificationSesProps;
 import com.nimbly.phshoesbackend.notification.email.providers.ses.util.TemplateJsonSerializer;
-import org.springframework.stereotype.Service;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.model.*;
@@ -16,8 +14,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
-@Service
-@ConditionalOnExpression("'${notification.transport:}'=='ses' or '${notification.transport:}'=='sesv2'")
 public class SesV2EmailTransport implements EmailTransportService {
 
     private final SesV2Client sesClient;
