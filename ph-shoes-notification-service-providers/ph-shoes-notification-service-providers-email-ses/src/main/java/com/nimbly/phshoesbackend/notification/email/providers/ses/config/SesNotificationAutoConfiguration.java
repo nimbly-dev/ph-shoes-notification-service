@@ -70,6 +70,12 @@ public class SesNotificationAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(TemplateJsonSerializer.class)
+    public TemplateJsonSerializer templateJsonSerializer() {
+        return new TemplateJsonSerializer();
+    }
+
+    @Bean
     @ConditionalOnExpression("'${notification.transport:}'=='ses' or '${notification.transport:}'=='sesv2'")
     @ConditionalOnMissingBean(EmailTransportService.class)
     public EmailTransportService sesV2EmailTransport(SesV2Client sesClient,
