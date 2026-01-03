@@ -10,14 +10,14 @@ public class TemplateJsonSerializer {
         if (map == null || map.isEmpty()) return "{}";
         StringBuilder sb = new StringBuilder("{");
         boolean first = true;
-        for (var e : map.entrySet()) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (!first) sb.append(',');
             first = false;
-            sb.append('"').append(escape(e.getKey())).append('"').append(':');
-            Object v = e.getValue();
-            if (v == null) sb.append("null");
-            else if (v instanceof Number || v instanceof Boolean) sb.append(v.toString());
-            else sb.append('"').append(escape(String.valueOf(v))).append('"');
+            sb.append('"').append(escape(entry.getKey())).append('"').append(':');
+            Object value = entry.getValue();
+            if (value == null) sb.append("null");
+            else if (value instanceof Number || value instanceof Boolean) sb.append(value.toString());
+            else sb.append('"').append(escape(String.valueOf(value))).append('"');
         }
         return sb.append('}').toString();
     }

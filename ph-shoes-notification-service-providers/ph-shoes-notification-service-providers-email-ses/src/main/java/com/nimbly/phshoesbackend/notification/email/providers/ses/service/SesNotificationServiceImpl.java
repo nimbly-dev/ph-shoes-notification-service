@@ -44,7 +44,6 @@ public class SesNotificationServiceImpl implements NotificationService {
                     .bccAddresses(mapAddrs(req.getBcc()))
                     .build();
 
-            // Subject with optional prefix
             String subject = req.getSubject();
             if (emailProps.getSubjectPrefix() != null && !emailProps.getSubjectPrefix().isBlank()) {
                 subject = (subject == null || subject.isBlank())
@@ -55,7 +54,6 @@ public class SesNotificationServiceImpl implements NotificationService {
             boolean hasAttachments = hasAttachments(req);
             boolean hasCustomHeaders = hasCustomHeaders(req);
 
-            // Content: template / raw (for attachments or custom headers) / simple
             EmailContent content;
             if (req.getTemplateId() != null && !hasAttachments && !hasCustomHeaders) {
                 Template template = Template.builder()
@@ -80,7 +78,7 @@ public class SesNotificationServiceImpl implements NotificationService {
 
             SendEmailRequest.Builder builder = SendEmailRequest.builder()
                     .destination(dest)
-                    .content(content)                 // <-- was emailContent(...)
+                    .content(content)
                     .fromEmailAddress(from);
 
             if (infraProps.getConfigurationSet() != null && !infraProps.getConfigurationSet().isBlank()) {
@@ -90,8 +88,6 @@ public class SesNotificationServiceImpl implements NotificationService {
             if (req.getTags() != null && !req.getTags().isEmpty()) {
                 builder = builder.emailTags(toTags(req.getTags()));
             }
-
-            // NOTE: SendEmailRequest has no clientToken in SESv2; removed.
 
             SendEmailResponse resp = ses.sendEmail(builder.build());
 
@@ -108,8 +104,6 @@ public class SesNotificationServiceImpl implements NotificationService {
             throw new NotificationSendException("SES send failed: " + e.getMessage(), e);
         }
     }
-
-    // ---------- helpers ----------
 
     private static List<String> mapAddrs(List<EmailAddress> list) {
         return (list == null || list.isEmpty())
@@ -156,13 +150,11 @@ public class SesNotificationServiceImpl implements NotificationService {
         sb.append("Subject: ").append(nullSafe(subject)).append("\r\n");
         sb.append("MIME-Version: 1.0\r\n");
 
-        // Optional unsubscribe headers only supported via RAW
         appendHeader(sb, req, "List-Unsubscribe", emailProps.getListUnsubscribe());
         appendHeader(sb, req, "List-Unsubscribe-Post", emailProps.getListUnsubscribePost());
 
         sb.append("Content-Type: multipart/mixed; boundary=\"").append(boundary).append("\"\r\n\r\n");
 
-        // alternative part (text/html)
         sb.append("--").append(boundary).append("\r\n");
         sb.append("Content-Type: multipart/alternative; boundary=\"").append(altBoundary).append("\"\r\n\r\n");
 
@@ -178,7 +170,6 @@ public class SesNotificationServiceImpl implements NotificationService {
         }
         sb.append("--").append(altBoundary).append("--\r\n");
 
-        // attachments
         req.getAttachments().forEach(att -> {
             sb.append("--").append(boundary).append("\r\n");
             sb.append("Content-Type: ").append(att.getMimeType()).append("\r\n");
