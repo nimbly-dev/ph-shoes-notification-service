@@ -32,11 +32,9 @@ public class EmailRequest {
     @NotBlank
     String subject;
 
-    // Either provide bodies directly...
     String textBody;
     String htmlBody;
 
-    // ...or use templates:
     String templateId;
 
     @Singular("templateVar")

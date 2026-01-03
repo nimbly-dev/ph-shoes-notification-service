@@ -13,11 +13,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
-
-/**
- * Creates an EmailTransport for SMTP. If a JavaMailSender already exists (e.g. app brings spring-boot-starter-mail),
- * we reuse it. Otherwise we build one from NotificationSmtpProps.
- */
 @AutoConfiguration
 @EnableConfigurationProperties({ NotificationSmtpProps.class, NotificationTransportProps.class })
 @ConditionalOnProperty(name = "notification.transport", havingValue = "smtp")

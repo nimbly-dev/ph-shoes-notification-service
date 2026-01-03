@@ -31,9 +31,6 @@ import org.springframework.context.annotation.Bean;
         SesWebhookProperties.class
 })
 public class CoreNotificationAutoConfiguration {
-
-    // --- utilities ---
-
     @Bean
     @ConditionalOnMissingBean
     public EmailAddressFormatter emailAddressFormatter() {
@@ -52,7 +49,6 @@ public class CoreNotificationAutoConfiguration {
         return new RawMimeBuilder(emailProps, formatter);
     }
 
-    // --- composition ---
     @Bean
     @ConditionalOnMissingBean
     public EmailCompositionService emailCompositionService(NotificationEmailProps emailProps,
